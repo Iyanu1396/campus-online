@@ -555,7 +555,7 @@ const Marketplace = ({ profile }) => {
               priceRange.min ||
               priceRange.max
                 ? "Try adjusting your search criteria or filters to find more items."
-                : "Be the first to create a listing and start trading!"}
+                : "No listings to show right now — check back soon!"}
             </p>
             {(searchQuery ||
               selectedCategory ||
