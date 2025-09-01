@@ -39,6 +39,7 @@ const ProfileSetupModal = ({
   onSubmit,
   isEditing = false,
   existingProfile = null,
+  loading = false,
 }) => {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -351,7 +352,7 @@ const ProfileSetupModal = ({
   if (!isOpen) return null;
 
   const isLoading =
-    avatarUploadMutation.isPending || avatarDeleteMutation.isPending;
+    loading || avatarUploadMutation.isPending || avatarDeleteMutation.isPending;
 
   return (
     <>
@@ -400,7 +401,7 @@ const ProfileSetupModal = ({
 
                   {/* Upload Button */}
                   <label className="absolute bottom-0 right-0 w-7 h-7 sm:w-8 sm:h-8 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors shadow-lg">
-                    {avatarUploadMutation.isPending ? (
+                    {isLoading ? (
                       <div className="w-3 h-3 sm:w-4 sm:h-4 border border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <Upload className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
@@ -410,7 +411,7 @@ const ProfileSetupModal = ({
                       accept="image/*"
                       onChange={handleImageUpload}
                       className="hidden"
-                      disabled={avatarUploadMutation.isPending}
+                      disabled={isLoading}
                     />
                   </label>
 
@@ -419,11 +420,11 @@ const ProfileSetupModal = ({
                     <button
                       type="button"
                       onClick={handleImageDelete}
-                      disabled={avatarDeleteMutation.isPending}
+                      disabled={isLoading}
                       className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg disabled:opacity-50"
                       title="Remove photo"
                     >
-                      {avatarDeleteMutation.isPending ? (
+                      {isLoading ? (
                         <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <X className="w-3 h-3 text-white" />
@@ -741,10 +742,16 @@ const ProfileSetupModal = ({
                   disabled={isLoading}
                   className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
-                  {isLoading ? (
+                  {loading ? (
                     <>
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       {isEditing ? "Updating..." : "Setting up..."}
+                    </>
+                  ) : avatarUploadMutation.isPending ||
+                    avatarDeleteMutation.isPending ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Processing...
                     </>
                   ) : isEditing ? (
                     "Update Profile"

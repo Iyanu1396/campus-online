@@ -241,7 +241,9 @@ const Profile = ({ user, isLoading, error, profile }) => {
               <div className="space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                   <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                    {profile?.displayName}
+                    {profile?.displayName && profile.displayName.length > 25
+                      ? `${profile.displayName.substring(0, 25)}...`
+                      : profile?.displayName}
                   </h1>
 
                   {/* Verified Badge */}
@@ -426,6 +428,7 @@ const Profile = ({ user, isLoading, error, profile }) => {
           onCancel={handleCloseModal}
           isEditing={true}
           existingProfile={profile}
+          loading={profileUpdateMutation.isPending}
         />
       )}
     </div>

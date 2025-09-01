@@ -181,7 +181,7 @@ const DashboardLayout = () => {
         user={user}
         isOpen={showProfileSetup}
         onSubmit={handleProfileSetup}
-        isSubmitting={profileSetupMutation.isPending}
+        loading={profileSetupMutation.isPending}
       />
     </div>
   );

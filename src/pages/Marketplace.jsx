@@ -1,6 +1,10 @@
 import { ShoppingBag, Search, Tag, TrendingUp, Package } from "lucide-react";
+import { useAllListings } from "../hooks/useAllListings";
+import { useEffect } from "react";
 
-const Marketplace = () => {
+const Marketplace = ({ profile }) => {
+  const { data: allListings, isLoading, error } = useAllListings(profile?.id);
+
   return (
     <div className="py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -88,25 +88,14 @@ const Navigation = ({ user, onSignOut, profile }) => {
 
             {/* Right Side Actions - Improved Desktop Layout */}
             <div className="flex items-center gap-4">
-              {/* User Profile (Desktop) - More Compact */}
-              <div className="hidden lg:flex items-center gap-3">
-                <div className="flex items-center gap-3 bg-gray-50/80 rounded-xl px-4 py-2.5 shadow-sm border border-gray-200/50 h-12">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
-                    <User className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-semibold text-gray-900">
-                      {profile?.full_name || "User"}
-                    </p>
-                  </div>
-                </div>
-
+              {/* Desktop Navigation - Only Sign Out Icon */}
+              <div className="hidden lg:flex items-center">
                 <button
                   onClick={() => setShowLogoutModal(true)}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-50/80 hover:bg-red-100/80 text-red-600 hover:text-red-700 transition-all duration-200 text-sm font-medium shadow-sm border border-red-200/50 hover:shadow-md"
+                  className="flex items-center justify-center w-12 h-12 rounded-xl bg-red-50/80 hover:bg-red-100/80 text-red-600 hover:text-red-700 transition-all duration-200 shadow-sm border border-red-200/50 hover:shadow-md"
+                  title="Sign Out"
                 >
-                  <LogOut className="w-4 h-4" />
-                  <span className="hidden xl:inline">Sign Out</span>
+                  <LogOut className="w-5 h-5" />
                 </button>
               </div>
 
@@ -128,7 +117,7 @@ const Navigation = ({ user, onSignOut, profile }) => {
           <div
             className={`lg:hidden overflow-hidden transition-all duration-500 ease-out ${
               isMenuOpen
-                ? "max-h-96 opacity-100 translate-y-0"
+                ? "max-h-[500px] opacity-100 translate-y-0"
                 : "max-h-0 opacity-0 -translate-y-4"
             }`}
           >
@@ -142,14 +131,26 @@ const Navigation = ({ user, onSignOut, profile }) => {
                       : "translate-y-4 opacity-0"
                   }`}
                 >
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-sm">
-                    <User className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm">
+                    {profile?.avatar_url ? (
+                      <img
+                        src={profile.avatar_url}
+                        alt={profile?.full_name || "User"}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                        <User className="w-6 h-6 text-white" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1">
-                    <p className="text-base font-semibold text-gray-900">
-                      {profile?.full_name || "User"}
+                    <p className="text-base font-semibold text-gray-900 truncate">
+                      {profile?.full_name && profile.full_name.length > 20
+                        ? `${profile.full_name.substring(0, 20)}...`
+                        : profile?.full_name || "User"}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 truncate">
                       {profile?.email || "user@email.com"}
                     </p>
                   </div>
@@ -189,7 +190,7 @@ const Navigation = ({ user, onSignOut, profile }) => {
                     setShowLogoutModal(true);
                     setIsMenuOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50/80 rounded-xl transition-all duration-300 font-semibold mt-4 border-t border-gray-200 pt-6 transform ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:text-red-700 hover:bg-red-50/80 rounded-xl transition-all duration-300 font-semibold mt-6 border-t border-gray-200 pt-6 transform ${
                     isMenuOpen
                       ? "translate-y-0 opacity-100"
                       : "translate-y-4 opacity-0"
