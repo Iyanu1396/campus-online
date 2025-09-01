@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Marketplace from "./pages/Marketplace";
 import YourListing from "./pages/YourListing";
+import ScrollToTop from "./components/ScrollToTop";
 import { useProfile } from "./hooks/useProfile";
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/supabase";
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -49,7 +51,10 @@ const App = () => {
                 />
               }
             />
-            <Route path="marketplace" element={<Marketplace profile={data} />} />
+            <Route
+              path="marketplace"
+              element={<Marketplace profile={data} />}
+            />
             <Route
               path="your-listing"
               element={<YourListing profile={data} />}
