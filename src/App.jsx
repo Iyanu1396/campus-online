@@ -37,7 +37,7 @@ const App = () => {
 
           {/* Dashboard Routes with Layout */}
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<Dashboard profile={data} />} />
             <Route
               path="profile"
               element={
@@ -49,7 +49,7 @@ const App = () => {
                 />
               }
             />
-            <Route path="marketplace" element={<Marketplace />} />
+            <Route path="marketplace" element={<Marketplace profile={data} />} />
             <Route
               path="your-listing"
               element={<YourListing profile={data} />}

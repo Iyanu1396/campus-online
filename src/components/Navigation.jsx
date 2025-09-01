@@ -54,13 +54,23 @@ const Navigation = ({ user, onSignOut, profile }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo/Brand */}
-            <div className="flex items-center">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Campus
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                  Online
-                </span>
-              </h1>
+            <div className="flex items-center gap-3">
+              <img
+                src="/campus-logo.png"
+                alt="Abraham Adesanya Polytechnic Logo"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-gray-200"
+              />
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  Campus
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                    Online
+                  </span>
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600 font-medium">
+                  Abraham Adesanya Polytechnic
+                </p>
+              </div>
             </div>
 
             {/* Desktop Navigation - Improved Layout */}
