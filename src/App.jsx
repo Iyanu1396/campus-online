@@ -7,9 +7,26 @@ import DashboardLayout from "./components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Marketplace from "./pages/Marketplace";
-import Connect from "./pages/Connect";
+import YourListing from "./pages/YourListing";
+import { useProfile } from "./hooks/useProfile";
+import { useState, useEffect } from "react";
+import { supabase } from "./lib/supabase";
 
 const App = () => {
+  const [user, setUser] = useState(null);
+  const { data, isLoading, error } = useProfile(user?.email);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
@@ -21,9 +38,22 @@ const App = () => {
           {/* Dashboard Routes with Layout */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="profile" element={<Profile />} />
+            <Route
+              path="profile"
+              element={
+                <Profile
+                  user={user}
+                  isLoading={isLoading}
+                  error={error}
+                  profile={data}
+                />
+              }
+            />
             <Route path="marketplace" element={<Marketplace />} />
-            <Route path="connect" element={<Connect />} />
+            <Route
+              path="your-listing"
+              element={<YourListing profile={data} />}
+            />
           </Route>
         </Routes>
         <Toaster

@@ -3,6 +3,7 @@ import { ArrowLeft, Mail, Send, CheckCircle, Clock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -61,32 +62,106 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute top-20 right-20 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-indigo-200/20 rounded-full blur-3xl"></div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url('campus-gate.jpg')`,
+        }}
+      />
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-sm sm:max-w-md w-full">
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/85 via-indigo-900/80 to-purple-900/85"></div>
+
+      {/* Additional subtle overlays for depth */}
+      <div className="absolute top-10 right-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-20 left-10 w-80 h-80 bg-indigo-500/15 rounded-full blur-3xl"></div>
+
+      {/* Header with Logo */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative z-10 flex items-center justify-between p-4 sm:p-6 lg:p-8"
+      >
+        <div className="flex items-center gap-3 sm:gap-4">
+          <motion.img
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            transition={{ duration: 0.3 }}
+            src="/campus-logo.png"
+            alt="Abraham Adesanya Polytechnic Logo"
+            className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 rounded-full object-cover border-2 border-white/30"
+          />
+          <div className="text-white">
+            <h1 className="font-bold text-sm sm:text-base lg:text-lg">
+              Campus Online
+            </h1>
+            <p className="text-xs sm:text-sm text-white/80">
+              Abraham Adesanya Polytechnic
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="relative z-10 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl w-full">
+          {/* Page Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-8 sm:mb-12"
+          >
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 sm:mb-6"
+            >
+              Welcome to
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500">
+                Campus Online
+              </span>
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto"
+            >
+              Sign in to access your polytechnic marketplace and connect with
+              the AAPOLY community
+            </motion.p>
+          </motion.div>
+
           {/* Back to Home */}
           <div className="text-center mb-8">
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
               onClick={handleBackToHome}
-              className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors duration-200 group"
+              className="inline-flex items-center text-sm text-white/80 hover:text-white transition-colors duration-200 group"
             >
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
               Back to Home
-            </button>
+            </motion.button>
           </div>
 
           {/* Main Card */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/50 overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/30 overflow-hidden max-w-md mx-auto"
+          >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 sm:px-8 py-6 sm:py-8 text-center text-white">
-              <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+            <div className="bg-gradient-to-r from-orange-600 to-red-600 px-6 sm:px-8 py-6 sm:py-8 text-center text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-2">
                 Welcome Back
-              </h1>
-              <p className="text-blue-100 text-base sm:text-lg">
+              </h2>
+              <p className="text-orange-100 text-base sm:text-lg">
                 Sign in to your Campus Online account
               </p>
             </div>
@@ -122,11 +197,13 @@ const LoginPage = () => {
                   </div>
 
                   {/* Submit Button */}
-                  <button
+                  <motion.button
                     type="button"
                     onClick={handleSubmit}
                     disabled={isLoading || countdown > 0}
-                    className="w-full flex justify-center items-center py-3 sm:py-4 px-6 rounded-xl text-base sm:text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex justify-center items-center py-3 sm:py-4 px-6 rounded-xl text-base sm:text-lg font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     {isLoading ? (
                       <>
@@ -144,7 +221,7 @@ const LoginPage = () => {
                         Send Magic Link
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
               ) : (
                 /* Success State */
@@ -215,14 +292,19 @@ const LoginPage = () => {
                 </>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Footer */}
-          <div className="text-center mt-6 sm:mt-8">
-            <p className="text-xs sm:text-sm text-gray-500">
-              Secure authentication • No passwords needed • University verified
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.0 }}
+            className="text-center mt-12 sm:mt-16"
+          >
+            <p className="text-xs sm:text-sm text-white/60">
+              Made with ❤️ for Abraham Adesanya Polytechnic students and staffs
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

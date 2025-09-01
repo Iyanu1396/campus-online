@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-const Navigation = ({ user, onSignOut }) => {
+const Navigation = ({ user, onSignOut, profile }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
@@ -21,7 +21,11 @@ const Navigation = ({ user, onSignOut }) => {
     { name: "Dashboard", path: "/dashboard", icon: Home },
     { name: "Profile", path: "/dashboard/profile", icon: User },
     { name: "Marketplace", path: "/dashboard/marketplace", icon: ShoppingBag },
-    { name: "Connect", path: "/dashboard/connect", icon: MessageSquare },
+    {
+      name: "Your Listing",
+      path: "/dashboard/your-listing",
+      icon: MessageSquare,
+    },
   ];
 
   const handleLogout = async () => {
@@ -92,7 +96,7 @@ const Navigation = ({ user, onSignOut }) => {
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-semibold text-gray-900">
-                      {user?.email?.split("@")[0] || "User"}
+                      {profile?.full_name || "User"}
                     </p>
                   </div>
                 </div>
@@ -143,10 +147,10 @@ const Navigation = ({ user, onSignOut }) => {
                   </div>
                   <div className="flex-1">
                     <p className="text-base font-semibold text-gray-900">
-                      {user?.email?.split("@")[0] || "User"}
+                      {profile?.full_name || "User"}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {user?.email || "user@email.com"}
+                      {profile?.email || "user@email.com"}
                     </p>
                   </div>
                 </div>

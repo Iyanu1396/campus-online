@@ -22,7 +22,48 @@ const fetchUserProfile = async (email) => {
       throw error;
     }
 
-    return data;
+    // Format and enhance profile data
+    const formattedProfile = {
+      ...data,
+      // Format display name
+      displayName: data.full_name || "Unknown User",
+      // Format role for display
+      roleDisplay: data.role === "STUDENT" ? "Student" : "Staff",
+      // Format department (handle null for non-teaching staff)
+      departmentDisplay: data.is_non_teaching_staff
+        ? "Non-Teaching Staff"
+        : data.department || "Not specified",
+      // Format matric number for students
+      matricDisplay:
+        data.role === "STUDENT" && data.matric_number
+          ? data.matric_number
+          : null,
+      // Format skills array
+      skillsDisplay: data.skills && data.skills.length > 0 ? data.skills : [],
+      // Format bio
+      bioDisplay: data.bio || "No bio provided",
+      // Format avatar
+      avatarDisplay: data.avatar_url || null,
+      // Format phone number
+      phoneDisplay: data.phone_number || "Not provided",
+
+      // Add verification status (all profiles are verified by default)
+      isVerified: true,
+      // Add join date (using created_at if available, otherwise current date)
+      joinDate: data.created_at
+        ? new Date(data.created_at).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })
+        : new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+    };
+
+    return formattedProfile;
   } catch (error) {
     console.error("Error fetching profile:", error);
     throw error;

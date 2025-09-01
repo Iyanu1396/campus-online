@@ -5,6 +5,7 @@ import Navigation from "./Navigation";
 import ProfileSetupModal from "./ProfileSetupModal";
 import { useProfile } from "../hooks/useProfile";
 import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const DashboardLayout = () => {
   const [user, setUser] = useState(null);
@@ -65,9 +66,98 @@ const DashboardLayout = () => {
     }
   };
 
+  const queryClient = useQueryClient();
+
+  // Profile setup mutation
+  const profileSetupMutation = useMutation({
+    mutationFn: async (profileData) => {
+      try {
+        let avatarUrl = null;
+
+        // Handle avatar upload if provided
+        if (
+          profileData.avatarUrl &&
+          profileData.avatarUrl.startsWith("data:")
+        ) {
+          // Convert base64 to blob
+          const response = await fetch(profileData.avatarUrl);
+          const blob = await response.blob();
+
+          // Generate unique filename
+          const fileExt = blob.type.split("/")[1];
+          const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+
+          // Upload to avatars bucket
+          const { data: uploadData, error: uploadError } =
+            await supabase.storage.from("avatars").upload(fileName, blob, {
+              cacheControl: "3600",
+              upsert: false,
+            });
+
+          if (uploadError) {
+            throw new Error(`Avatar upload failed: ${uploadError.message}`);
+          }
+
+          // Get public URL
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from("avatars").getPublicUrl(fileName);
+
+          avatarUrl = publicUrl;
+        }
+
+        // Prepare profile data for database
+        const profilePayload = {
+          user_id: user.id,
+          full_name: profileData.fullName,
+          phone_number: profileData.phoneNumber,
+          email: user.email,
+          role: profileData.role,
+          department: profileData.department || null,
+          is_non_teaching_staff: profileData.isNonTeachingStaff || false,
+          bio: profileData.bio || null,
+          skills: profileData.skills,
+          matric_number:
+            profileData.role === "STUDENT" ? profileData.matricNumber : null,
+          avatar_url: avatarUrl,
+        };
+
+        // Insert profile into database
+        const { data: insertData, error: insertError } = await supabase
+          .from("profiles")
+          .insert([profilePayload])
+          .select()
+          .single();
+
+        if (insertError) {
+          throw new Error(`Profile creation failed: ${insertError.message}`);
+        }
+
+        return insertData;
+      } catch (error) {
+        console.error("Profile setup error:", error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      toast.success("Profile setup completed successfully!");
+
+      // Invalidate and refetch profile data
+      queryClient.invalidateQueries({ queryKey: ["profile", user?.email] });
+
+      // Close profile setup modal
+      setShowProfileSetup(false);
+
+      // Navigate to profile page
+      navigate("/dashboard/profile");
+    },
+    onError: (error) => {
+      toast.error(`Profile setup failed: ${error.message}`);
+    },
+  });
+
   const handleProfileSetup = async (profileData) => {
-    console.log(profileData);
-    toast.success("Profile setup completed successfully!");
+    profileSetupMutation.mutate(profileData);
   };
 
   if (loading) {
@@ -83,7 +173,7 @@ const DashboardLayout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation user={user} onSignOut={handleSignOut} />
+      <Navigation profile={profile} user={user} onSignOut={handleSignOut} />
       <Outlet />
 
       {/* Profile Setup Modal */}
@@ -91,6 +181,7 @@ const DashboardLayout = () => {
         user={user}
         isOpen={showProfileSetup}
         onSubmit={handleProfileSetup}
+        isSubmitting={profileSetupMutation.isPending}
       />
     </div>
   );
